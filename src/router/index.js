@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Secret from '../views/Secret.vue'
+import firebase from 'firebase'
 
 Vue.use(VueRouter)
 
@@ -13,14 +14,17 @@ const routes = [
     component: Home
   },
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: Login
   },
   {
-    path: '/',
+    path: '/secret',
     name: 'Secret',
-    component: Secret
+    component: Secret,
+    meta: {
+      authRequired: true,
+    }
   },
   {
     path: '/about',
@@ -37,5 +41,21 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+// Make sure user is logged in to see secret page
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.authRequired)) {
+    if (firebase.auth().currentUser) {
+      next();
+    } else {
+      alert('You must be logged in to see this page');
+      next({
+        path: '/',
+      });
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

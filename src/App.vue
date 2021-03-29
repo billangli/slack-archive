@@ -4,11 +4,34 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
       <router-link to="/Login">Login</router-link> |
-      <router-link to="/Secret">Secret</router-link>
+      <router-link to="/Secret">Secret</router-link> |
+      <button v-on:click="logout">Log Out</button>
     </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
+
+<script>
+import firebase from "firebase";
+
+export default {
+  methods: {
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          alert("Successfully logged out");
+          this.$router.push("/");
+        })
+        .catch((error) => {
+          alert(error.message);
+          this.$router.push("/");
+        });
+    },
+  },
+};
+</script>
 
 <style>
 #app {
