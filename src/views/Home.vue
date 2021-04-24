@@ -1,8 +1,7 @@
 <template>
   <div class="home">
-    <h1>CSC428 Slack Data Highlights</h1>
-
     <div class="login" v-show="!loggedIn">
+      <h1>CSC428 Slack Data Highlights</h1>
       <h3>How to get your username</h3>
 
       <ol>
@@ -28,7 +27,7 @@
 
       <p v-show="loginFailed" style="color: red">
         Login failed, your username should be a 11 letter/number code starting
-        with U
+        with U.
       </p>
     </div>
 
@@ -36,32 +35,40 @@
       <h2>Hi {{ this.response["first_name"] }},</h2>
 
       <p>
-        Here are some of your highlights! This data was only collected from
-        public channels in the CSC428 Slack chat. If you have any questions,
-        please let Bill Ang Li know.
+        Congrats on getting through this year! Let's take some time to thank
+        yourself for your contributions to class.
       </p>
 
-      <ul>
-        <li>You've written {{ this.response["num_msgs"] }} messages.</li>
-        <li>
-          You've written
-          {{ this.response["num_words"] }} words.
+      <p>
+        You've written {{ this.response["num_msgs"] }} messages in public
+        channels with a total of {{ this.response["num_words"] }} words. You've
+        received {{ this.response["num_reactions"] }} reactions and
+        {{ this.response["num_replies"] }} replies to your messages.
+      </p>
+
+      <p>
+        As a class, we've written 4062 messages in public channels with a total
+        of 62590 words (mostly from Joseph). We've sent 2691 reactions and the
+        most used reactions were:
+      </p>
+      <ol>
+        <li v-for="item in topEmojis" v-bind:key="item.id">
+          {{ item }}
         </li>
-        <li>
-          You've received
-          {{ this.response["num_reactions"] }} reactions to your messages.
-        </li>
-        <li>
-          You've received {{ this.response["num_replies"] }} replies to your
-          messages.
-        </li>
-      </ul>
+      </ol>
+
+      <p>
+        This data was only collected from public channels in the CSC428 Slack
+        chat. If you have any questions, please let Bill Ang Li know.
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 import { getUser } from "@/main";
+
+const emoji = require("emoji-name-map");
 
 export default {
   name: "Home",
@@ -71,6 +78,13 @@ export default {
       response: null,
       loginFailed: false,
       loggedIn: false,
+      topEmojis: [
+        emoji.get("white_check_mark") + " 577",
+        emoji.get("+1") + " 482",
+        emoji.get("raised_hands") + " 456",
+        emoji.get("eyes") + " 390",
+        emoji.get("joy") + "103",
+      ],
     };
   },
   methods: {
@@ -94,7 +108,10 @@ ul {
   list-style-type: none;
   padding: 0;
 }
-a {
-  color: #42b983;
+.home {
+  width: 500px;
+  margin: 100px auto 0px auto;
+  padding: 100px;
+  background-color: white;
 }
 </style>
