@@ -18,7 +18,16 @@ const firebaseConfig = {
   appId: "1:448593768234:web:b86d728ab462731f593853",
 };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+
+const db = firebaseApp.firestore();
+const usersCollection = db.collection('users');
+
+export const getUser = async id => {
+  const user = await usersCollection.doc(id).get();
+  if (user.exists) console.log(user.data());
+  return user.exists ? user.data() : null;
+}
 
 new Vue({
   router,
